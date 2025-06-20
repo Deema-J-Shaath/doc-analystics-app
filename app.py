@@ -7,7 +7,6 @@ from search import search_documents
 from stats import get_statistics
 from classify import MultiLevelClassifier
 from datetime import datetime
-from werkzeug import secure_filename
 import json
 
 # Local storage setup
@@ -164,7 +163,7 @@ def search():
     # Sort the results
     reverse_order = sort_order == 'desc'
     if sort_by == 'title':
-        results['results'].sort(key=lambda x: x.get('title', '').lower(), reverse=reverse_order)
+        results['results'].sort(key=lambda x: x['title'].lower(), reverse=reverse_order)
     elif sort_by == 'filename':
         results['results'].sort(key=lambda x: x['filename'].lower(), reverse=reverse_order)
     elif sort_by == 'size':
@@ -269,7 +268,6 @@ def update_document(filename):
             updated_log = []
             found = False
             for doc in documents:
-                doc["filename"] = secure_filename(new_file.filename)
                 if doc["filename"] == filename:
                     doc["text"] = result["content"][:500]
                     doc["title"] = result["title"]
